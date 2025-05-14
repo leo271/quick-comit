@@ -43,6 +43,11 @@ async fn main() -> Result<()> {
         }
     }
 
+    // Exit early if no staged changes
+    if diff.trim().is_empty() {
+        eprintln!("No staged changes detected.");
+        return Ok(());
+    }
     // AIプロンプト組み立て: main.rs を含むステージ済み変更の diff を渡す
     let user_message = format!(
         "You are an assistant that generates “exact” commit messages following Conventional Commits.\n\
