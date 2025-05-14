@@ -2,6 +2,7 @@
     "cSpell.words": [
         "dialoguer",
         "reqwest",
+        "rustls",
         "serde"
     ]
 }
