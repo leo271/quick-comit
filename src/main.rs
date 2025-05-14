@@ -51,6 +51,8 @@ async fn main() -> Result<()> {
         diff
     );
 
+    println!("{}", user_message);
+
     let messages = vec![json!({"role": "user", "content": user_message})];
 
     let api_key = env::var("COHERE_API_KEY")?;
