@@ -86,7 +86,7 @@ async fn main() -> Result<()> {
 
     // 実行時間を表示
     let elapsed = start.elapsed();
-    eprintln!("Execution time: {:.3?}", elapsed);
+    eprintln!("Cohere-Commit execution time: {:.3?}", elapsed);
 
     Ok(())
 }
