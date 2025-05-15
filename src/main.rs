@@ -48,11 +48,23 @@ async fn main() -> Result<()> {
         eprintln!("No staged changes detected.");
         return Ok(());
     }
+
+    if Command::new("git")
+        .args(&["hook", "run", "pre-commit", "--ignore-missing"])
+        .status()?
+        .success()
+    {
+        eprintln!("pre-commit hook OK");
+    } else {
+        eprintln!("pre-commit hook failed — aborting");
+        std::process::exit(1);
+    }
+
     // AIプロンプト組み立て: main.rs を含むステージ済み変更の diff を渡す
     let user_message = format!(
         "You are an assistant that generates “exact” commit messages following Conventional Commits.\n\
-        Input: Git diff of all staged changes, including changes in src/main.rs.\n\
-        Output: Commit message in Conventional Commits format:\n\n\
+        Input: Git diff of all staged changes, including changes in src/main.rs.\n\n
+        Output: Commit message in Conventional Commits format:\n\n\np
           <type>(<scope>): <short description>\n\n\
           <detailed body>\n\n\
         Rules:\n\
@@ -84,7 +96,7 @@ async fn main() -> Result<()> {
 
     // 4. レスポンスから候補をパース（ここでは choices[].message.content が \n 区切りと仮定）
     let text = response["message"]["content"][0]["text"].as_str().unwrap_or_default();
-    let text = text.replace("```markdown", "").trim().to_string();
+    let text = text.replace("```markdown", "").replace("```", "").trim().to_string();
     
     // 6. 選択したメッセージを出力（ここを `git commit -m` に流すなども可）
     println!("{}", text);
@@ -94,9 +106,16 @@ async fn main() -> Result<()> {
         .arg("commit")
         .arg("-m")
         .arg(&text)
+        .arg("--no-verify")
         .output()?;
     // 実行結果を表示（必要に応じて）
-    eprintln!("{}", String::from_utf8_lossy(&commit_output.stdout));
+        // git は多くの場合標準エラーに結果を出すので両方表示する
+    eprintln!(
+        "out: {}{}",
+        String::from_utf8_lossy(&commit_output.stdout),
+        String::from_utf8_lossy(&commit_output.stderr)
+    );
+
 
     // 実行時間を表示
     let elapsed = start.elapsed();
