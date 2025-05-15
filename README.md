@@ -26,3 +26,20 @@ git push origin # リモートに反映
     ]
 }
 ```
+
+# Parameters
+
+
+# Architecture
+
+cohere-commit/  
+├── Cargo.toml  
+└── src/  
+    ├── main.rs        ← エントリポイント  
+    ├── lib.rs         ← 各モジュールをまとめる  
+    ├── cli.rs         ← CLI 周りの設定・引数パース  
+    ├── git.rs         ← Git 操作（ステージ取得・diff 取得・フック・コミット）  
+    ├── ai.rs          ← Cohere API クライアント  
+    ├── prompt.rs      ← プロンプト生成ロジック  
+    ├── timer.rs       ← 実行時間計測ユーティリティ  
+    └── errors.rs      ← 共通エラー型・Result エイリアス  
