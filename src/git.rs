@@ -1,6 +1,6 @@
 use std::process::Command;
 
-use anyhow::Result;
+use anyhow::{Result, anyhow};
 
 pub fn collect_diff() -> Result<String> {
     // Get staged file statuses (A=added, M=modified, D=deleted)
@@ -46,11 +46,25 @@ pub fn run_pre_commit_hook() -> Result<()> {
         println!("pre-commit hook OK");
         Ok(())
     } else {
-        eprintln!("pre-commit hook failed — aborting");
-        std::process::exit(1);
+        Err(anyhow!("pre-commit hook failed — aborting"))
     }
 }
 
 pub fn commit(msg: &str) -> Result<()> {
-    Ok(())
+    let commit_output = Command::new("git")
+        .arg("commit")
+        .arg("-m")
+        .arg(&msg)
+        .arg("--no-verify")
+        .output()?;
+    // 実行結果を表示（必要に応じて）
+    if commit_output.status.success() {
+        Ok(())
+    } else {
+        Err(anyhow!(
+            "git commit failed: {}{}",
+            String::from_utf8_lossy(&commit_output.stdout),
+            String::from_utf8_lossy(&commit_output.stderr)
+        ))
+    }
 }
