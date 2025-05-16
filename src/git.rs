@@ -1,14 +1,13 @@
 use anyhow::Result;
 
-
-pub fn collect_diff() -> Result<String>{
+pub fn collect_diff() -> Result<String> {
     Ok("ok".to_string())
 }
 
-pub fn run_pre_commit_hook() -> Result<()>{
+pub fn run_pre_commit_hook() -> Result<()> {
     Ok(())
 }
 
-pub fn commit(msg: &str) -> Result<()>{
+pub fn commit(msg: &str) -> Result<()> {
     Ok(())
 }
