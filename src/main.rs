@@ -87,7 +87,7 @@ async fn main() -> Result<()> {
         .header("Content-Type", "application/json")
         .json(&json!({
             "stream": false,
-            "model": "command-light",
+            "model": "command-light-nightly",
             "messages": [
                 {
                     "role": "user",
