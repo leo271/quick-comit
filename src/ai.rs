@@ -14,7 +14,7 @@ pub async fn generate_commit_message(prompt: &str) -> Result<String> {
         .post("https://api.cohere.com/v2/chat")
         .bearer_auth(api_key)
         .json(&json!({
-            "model": "command-light",
+            "model": "command-r",
             "messages": messages,
         }))
         .send()
