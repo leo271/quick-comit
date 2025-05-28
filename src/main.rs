@@ -94,6 +94,10 @@ async fn main() -> Result<()> {
         .json()
         .await?;
 
+
+
+    
+
     // 4. レスポンスから候補をパース（ここでは choices[].message.content が \n 区切りと仮定）
     let text = response["message"]["content"][0]["text"].as_str().unwrap_or_default();
     let text = text.replace("```markdown", "").replace("```", "").trim().to_string();
