@@ -77,26 +77,31 @@ async fn main() -> Result<()> {
         diff
     );
 
-    let messages = vec![json!({"role": "user", "content": user_message})];
-
     let api_key = env::var("COHERE_API_KEY")?;
     let client = Client::new();
 
     let response: Value = client
         .post("https://api.cohere.com/v2/chat")
         .bearer_auth(api_key)
+        .header("X-Client-Name", "quick-commit")
+        .header("Content-Type", "application/json")
         .json(&json!({
-            "model": "command-r7b-12-2024",
-            "messages": messages,
+            "stream": false,
+            "model": "command-a-03-2025",
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        { "type": "text", "text": user_message }
+                    ]
+                }
+            ]
         }))
         .send()
         .await?
         .json()
         .await?;
 
-
-
-    
 
     // 4. レスポンスから候補をパース（ここでは choices[].message.content が \n 区切りと仮定）
     let text = response["message"]["content"][0]["text"].as_str().unwrap_or_default();
