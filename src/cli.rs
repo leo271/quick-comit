@@ -27,3 +27,5 @@ pub async fn run() -> Result<()> {
     eprintln!("Quick-Commit execution time: {:.3?}", timer.elapsed());
     Ok(())
 }
+
+
